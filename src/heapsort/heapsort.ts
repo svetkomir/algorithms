@@ -34,7 +34,7 @@ const maxHeapify = (heap: Heap, root: number)  => {
 
   // If we swapped anything out of the children we need to run maxHeapify on them
 
-  // Uncomment the next line to watch each step
+  // Uncomment the next line to watch each step(ish)
   //console.log(heap)
   if (maxHeapifyLeft) {
     maxHeapify(heap, left)
@@ -56,7 +56,7 @@ const buildMaxHeap = (heap: Heap) => {
   }
 }
 
-export const heapSort = (array: number[]) => {
+export const heapSort = async (array: number[]) => {
   let heap:Heap = {
     array: array,
     size: array.length
