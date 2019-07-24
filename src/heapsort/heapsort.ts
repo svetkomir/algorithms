@@ -1,4 +1,3 @@
-import { arr } from './input'
 import { swap } from '../lib/array'
 
 interface Heap {
@@ -35,7 +34,8 @@ const maxHeapify = (heap: Heap, root: number)  => {
 
   // If we swapped anything out of the children we need to run maxHeapify on them
 
-  console.log(heap)
+  // Uncomment the next line to watch each step
+  //console.log(heap)
   if (maxHeapifyLeft) {
     maxHeapify(heap, left)
   }
@@ -56,7 +56,12 @@ const buildMaxHeap = (heap: Heap) => {
   }
 }
 
-const heapSort = (heap: Heap) => {
+export const heapSort = (array: number[]) => {
+  let heap:Heap = {
+    array: array,
+    size: array.length
+  }
+  
   while (heap.size>0){
     // Build max heap
     buildMaxHeap(heap)
@@ -69,10 +74,3 @@ const heapSort = (heap: Heap) => {
     heap.size--
   }
 }
-
-const heap:Heap = {
-  array: arr,
-  size: arr.length
-}
-heapSort(heap)
-
