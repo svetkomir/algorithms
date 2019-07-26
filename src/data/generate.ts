@@ -1,4 +1,4 @@
-function random(low: number, high: number) {
+export const random = (low: number, high: number) => {
   return Math.floor(Math.random() * (high - low) + low)
 }
 
