@@ -68,6 +68,27 @@ export class BinaryTree {
   }
 
   /**
+   * Pretty self explanatory. Same complexity as binary search.
+   */
+  find = (searchValue:number, node:TNode = this.root): TNode => {
+    if (!node) {
+      return null
+    }
+
+    let current:TNode = node;
+
+    while (current && current.value != searchValue) {
+      if (current.value > searchValue) {
+        current = current.left
+      } else {
+        current = current.right
+      }
+    }
+    
+    return current
+  }
+
+  /**
    * Find the minimum node, starting from the parameter node.
    * 
    * @param node 
@@ -155,6 +176,71 @@ export class BinaryTree {
     // At this point we have found the next smaller or the next smaller doesn't exist.
     // If it doesn't exist we'll return null.
     return current.parent
+  }
+
+  delete = (value:number):boolean => {
+    let node = this.find(value)
+
+    if (!node) {
+      return false
+    }
+
+    return this.deleteNode(node)
+  }
+
+  deleteNode = (node:TNode):boolean => {
+    if (!node) {
+      return false
+    }
+
+
+    // If we have left node but no right one
+    if (node.left && !node.right) {
+      // If we're trying to delete the root level - set root to left
+      if (!node.parent) {
+        this.root = node.left
+        this.root.parent = null
+      } else {
+        // This is not the root level
+        // If the parent is pointing to the left to current - reset parent.left
+        if (node.parent.left === node) {
+          node.parent.left = node.left
+        } else {
+          // Otherwise - reset parent.right
+          node.parent.right = node.left
+        }
+        node.left.parent = node.parent
+      } 
+    // Same thing, but inverted
+    } if (!node.left && node.right) {
+      if (!node.parent) {
+        this.root = node.right
+        this.root.parent = null
+      } else {
+        // We're still checking the parent connection the same way - 
+        // just assigning the right child (because in this case only the right exists)
+        if (node.parent.left === node) {
+          node.parent.left = node.right
+        } else {
+          node.parent.right = node.right
+        }
+        node.right.parent = node.parent
+      } 
+    } else {
+      // And this is the most complicated scenario - when the node has two children
+
+      // Find the next greatest value 
+      let sucessor = this.findNextGreater(node)
+
+      // Swap the values in the nodes
+      node.value = sucessor.value
+
+      // Delete the sucessor value. This will work because the successor node only ever
+      // has one child and we're guaranteed to stop before going into infinite loop.
+      return this.deleteNode(sucessor)
+    }
+
+    return true
   }
 
   /**

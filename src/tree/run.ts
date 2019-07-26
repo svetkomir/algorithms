@@ -10,8 +10,8 @@ for (let i=0; i<arr.length; i++) {
 
 tr.display()
 
-console.log(tr.findMax())
-console.log(tr.findMin())
+console.log(`max value is ${tr.findMax().value}`)
+console.log(`min value is ${tr.findMin().value}`)
 
 
 
