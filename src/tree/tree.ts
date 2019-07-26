@@ -127,7 +127,7 @@ export class BinaryTree {
   }
 
   /**
-   * AKA "successor" of the parameter node. 
+   * AKA "sucessor" of the parameter node. 
    * Funny thing - we don't need to look at the values to find the next larger.
    * Maybe we should depending on how we handle repeating values. 
    * 
