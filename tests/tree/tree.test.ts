@@ -95,9 +95,26 @@ describe("Tree tests", function() {
 
   it('should calculate insert height correctly', () => {
     expect(tree.root.height).toEqual(3)
+    
     tree.insert(16)
     tree.insert(17)
-    tree.display()
+    expect(tree.root.height).toEqual(5)
+  })
+
+  it('should calculate delete height correctly', () => {
+    expect(tree.root.height).toEqual(3)
+    
+    tree.insert(16)
+    tree.insert(17)
+    expect(tree.root.height).toEqual(5)
+
+    tree.delete(8)
+    expect(tree.root.height).toEqual(4)
+    expect(tree.find(14).height).toEqual(3)
+
+    tree.delete(16)
+    expect(tree.root.height).toEqual(3)
+    expect(tree.find(15).height).toEqual(1)
   })
 
 })

@@ -77,6 +77,10 @@ export class BinaryTree {
     return current
   }
 
+  /**
+   * This goes from the starting node through node's parent until it reaches the root. 
+   * Recalculates the height for each parent. Should work for delete or insert.
+   */
   private correctHeight = (node: TNode) => {
     let current: TNode = node
 
@@ -235,7 +239,12 @@ export class BinaryTree {
           // Otherwise - reset parent.right
           node.parent.right = node.left
         }
+        // Correct the parent link
         node.left.parent = node.parent
+
+        // At this point the deletion is complete. Run the height recalculation routine.
+        // Start from the node that was moved "up".
+        this.correctHeight(node.left)
       }
     // Same thing, but inverted
     } if (!node.left && node.right) {
@@ -251,7 +260,12 @@ export class BinaryTree {
         } else {
           node.parent.right = node.right
         }
+        // Correct the parent link
         node.right.parent = node.parent
+
+        // At this point the deletion is complete. Run the height recalculation routine.
+        // Start from the node that was moved up a level.
+        this.correctHeight(node.right)
       }
     } else {
       // And this is the most complicated scenario - when the node has two children
