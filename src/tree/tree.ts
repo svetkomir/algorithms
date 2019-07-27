@@ -69,6 +69,39 @@ export class BinaryTree {
     }
   }
 
+  insertHeight(value: number): TNode {
+    let newNode: TNode = this.insert(value)
+    this.correctHeight(newNode)
+    return newNode
+  }
+
+  correctHeight = (node: TNode) => {
+    let current: TNode = node
+
+    while(!false) {
+      // Exit condition - we've reached the root node.
+      if (!current.parent) {
+        return
+      }
+
+      if (current.parent.left === current) {
+        if (!current.parent.right) {
+          current.parent.height++
+        } else if ((current.height-current.parent.right.height) === 1) {
+          current.parent.height++
+        }
+      } else if (current.parent.right === current) {
+        if (!current.parent.left) {
+          current.parent.height++
+        } else if ((current.height-current.parent.left.height) === 1) {
+          current.parent.height++
+        }
+      }
+
+      current = current.parent
+    }
+  } 
+
   /**
    * Pretty self explanatory. Same complexity as binary search.
    */
