@@ -93,24 +93,6 @@ describe("Tree tests", function() {
 
   })
 
-  it('should insert with correct heights', () => {
-    tree.delete(8)
-    expect(tree.find(8)).toEqual(null)
-
-    let found2:TNode = tree.find(2)
-    expect(tree.findNextGreater(found2).value).toEqual(5)
-    expect(tree.findNextSmaller(found2)).toEqual(null)
-
-    let found15:TNode = tree.find(15)
-    expect(tree.findNextSmaller(found15).value).toEqual(14)
-    expect(tree.findNextGreater(found15)).toEqual(null)
-
-    let found14:TNode = tree.find(14)
-    expect(tree.findNextSmaller(found14).value).toEqual(7)
-    expect(tree.findNextGreater(found14).value).toEqual(15)
-
-  })
-
   it('should calculate insert height correctly', () => {
     expect(tree.root.height).toEqual(3)
   })
