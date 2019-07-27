@@ -10,15 +10,13 @@ import * as process from 'process'
  */
 export class TNode {
   value: number
-  parent?: TNode
-  left?: TNode
-  right?: TNode
+  height: number = 0
+  parent?: TNode = null
+  left?: TNode = null
+  right?: TNode = null
 
   constructor(value: number) {
     this.value = value
-    this.left = null
-    this.right = null
-    this.parent = null
   }
 }
 
@@ -26,6 +24,7 @@ export class BinaryTree {
   root?: TNode = null
   size: number = 0
 
+  // This is a variable used for display. Increase for larger trees.
   dist: number = 5
 
   /**
@@ -33,11 +32,12 @@ export class BinaryTree {
    * @param tree 
    * @param value 
    */
-  insert = (value: number) => {
+  insert = (value: number):TNode => {
     if (!this.root) {
+      // Height defaults to 0 so we're good here
       this.root = new TNode(value)
       this.size = 1
-      return
+      return this.root
     }
 
     let current: TNode = this.root
@@ -49,18 +49,21 @@ export class BinaryTree {
      * Famous last words. 
      */
     while (!false) {
+      current.height++
       if (current.value >= value) {
         if (!current.left) {
+          // Height defaults to 0 so we're good here
           current.left = new TNode(value)
           current.left.parent = current
-          return
+          return current.left
         }
         current = current.left
       } else {
         if (!current.right) {
+          // Height defaults to 0 so we're good here. Again.
           current.right = new TNode(value)
           current.right.parent = current
-          return
+          return current.right
         }
         current = current.right
       }
@@ -129,7 +132,6 @@ export class BinaryTree {
   /**
    * AKA "sucessor" of the parameter node.
    * Funny thing - we don't need to look at the values to find the next larger.
-   * Maybe we should depending on how we handle repeating values. 
    * 
    * @param node
    */
@@ -185,6 +187,7 @@ export class BinaryTree {
       return false
     }
 
+    this.size--
     return this.deleteNode(node)
   }
 
@@ -196,6 +199,7 @@ export class BinaryTree {
 
     // If we have left node but no right one
     if (node.left && !node.right) {
+      this.size--
       // If we're trying to delete the root level - set root to left
       if (!node.parent) {
         this.root = node.left
@@ -213,6 +217,7 @@ export class BinaryTree {
       } 
     // Same thing, but inverted
     } if (!node.left && node.right) {
+      this.size--
       if (!node.parent) {
         this.root = node.right
         this.root.parent = null
@@ -243,6 +248,20 @@ export class BinaryTree {
     return true
   }
 
+  avlInsert(value:number) {
+    this.insert(value)
+
+    this.fixAvl()
+  }
+
+  fixAvl = () => {
+
+  }
+
+  rightRotate= (node:TNode):TNode => {
+    return null
+  }
+
   /**
    * Shamelessly stolen from:
    * https://www.geeksforgeeks.org/print-binary-tree-2-dimensions/
@@ -261,7 +280,7 @@ export class BinaryTree {
     for (let i = this.dist; i<space; i++) {
       process.stdout.write(' ')
     }
-    process.stdout.write(node.value+'\n')
+    process.stdout.write(node.value+' ('+node.height+')\n')
 
     this.displayInner(node.left, space)
   }

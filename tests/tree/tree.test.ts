@@ -92,5 +92,10 @@ describe("Tree tests", function() {
     expect(tree.findNextGreater(found14).value).toEqual(15)
 
   })
+
+  it('should calculate height correctly', () => {
+    tree.display()
+    expect(tree.root.height).toEqual(4)
+  })
 })
 
