@@ -93,9 +93,5 @@ describe("Tree tests", function() {
 
   })
 
-  it('should calculate height correctly', () => {
-    tree.display()
-    expect(tree.root.height).toEqual(4)
-  })
 })
 

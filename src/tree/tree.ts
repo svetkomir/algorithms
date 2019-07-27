@@ -9,8 +9,8 @@ import * as process from 'process'
  * 
  */
 export class TNode {
-  value: number
-  height: number = 0
+  public value: number
+  height: number = 0 
   parent?: TNode = null
   left?: TNode = null
   right?: TNode = null
@@ -49,7 +49,6 @@ export class BinaryTree {
      * Famous last words. 
      */
     while (!false) {
-      current.height++
       if (current.value >= value) {
         if (!current.left) {
           // Height defaults to 0 so we're good here
