@@ -3,19 +3,19 @@ import * as process from 'process'
 
 /**
  * Thoughts on tree nodes:
- * 
- * 1. If the value is a simple type (number, string, bool and 
+ *
+ * 1. If the value is a simple type (number, string, bool and
  * so forth) we can have a counter variable for repeating nodes.
- * 
+ *
  */
 export class TNode {
   public value: number
-  height: number = 0 
+  height: number = 0
   parent?: TNode = null
   left?: TNode = null
   right?: TNode = null
 
-  constructor(value: number) {
+  constructor (value: number) {
     this.value = value
   }
 }
@@ -29,10 +29,10 @@ export class BinaryTree {
 
   /**
    * Insert a value at the correct place
-   * @param tree 
-   * @param value 
+   * @param tree
+   * @param value
    */
-  insert = (value: number):TNode => {
+  insert = (value: number): TNode => {
     if (!this.root) {
       // Height defaults to 0 so we're good here
       this.root = new TNode(value)
@@ -43,10 +43,10 @@ export class BinaryTree {
     let current: TNode = this.root
     this.size++
 
-    /** 
-     * Mhmmmm. That is exactly what you think it is. 
+    /**
+     * Mhmmmm. That is exactly what you think it is.
      * They say when you know the rules you can break them.
-     * Famous last words. 
+     * Famous last words.
      */
     while (!false) {
       if (current.value >= value) {
@@ -54,7 +54,8 @@ export class BinaryTree {
           // Height defaults to 0 so we're good here
           current.left = new TNode(value)
           current.left.parent = current
-          return current.left
+          current = current.left
+          break
         }
         current = current.left
       } else {
@@ -62,78 +63,68 @@ export class BinaryTree {
           // Height defaults to 0 so we're good here. Again.
           current.right = new TNode(value)
           current.right.parent = current
-          return current.right
+          current = current.right
+          break
         }
         current = current.right
       }
     }
+
+    let returnValue: TNode = current
+
+    this.correctHeight(current)
+
+    return current
   }
 
-  insertHeight(value: number): TNode {
-    let newNode: TNode = this.insert(value)
-    this.correctHeight(newNode)
-    return newNode
-  }
-
-  correctHeight = (node: TNode) => {
+  private correctHeight = (node: TNode) => {
     let current: TNode = node
 
-    while(!false) {
+    while (!false) {
       // Exit condition - we've reached the root node.
       if (!current.parent) {
         return
       }
 
-      if (current.parent.left === current) {
-        if (!current.parent.right) {
-          current.parent.height++
-        } else if ((current.height-current.parent.right.height) === 1) {
-          current.parent.height++
-        }
-      } else if (current.parent.right === current) {
-        if (!current.parent.left) {
-          current.parent.height++
-        } else if ((current.height-current.parent.left.height) === 1) {
-          current.parent.height++
-        }
-      }
+      current.parent.height = Math.max(current.parent.left ? current.parent.left.height : -1,
+        current.parent.right ? current.parent.right.height : -1) + 1
 
       current = current.parent
     }
-  } 
+  }
 
   /**
    * Pretty self explanatory. Same complexity as binary search.
    */
-  find = (searchValue:number, node:TNode = this.root): TNode => {
+  find = (searchValue: number, node: TNode = this.root): TNode => {
     if (!node) {
       return null
     }
 
-    let current:TNode = node;
+    let current: TNode = node
 
-    while (current && current.value != searchValue) {
+    while (current && current.value !== searchValue) {
       if (current.value > searchValue) {
         current = current.left
       } else {
         current = current.right
       }
     }
-    
+
     return current
   }
 
   /**
    * Find the minimum node, starting from the parameter node.
-   * 
-   * @param node 
+   *
+   * @param node
    */
   findMin = (node: TNode = this.root): TNode => {
     if (!node) {
       return null
     }
 
-    let current: TNode = node;
+    let current: TNode = node
 
     while (current.left) {
       current = current.left
@@ -144,15 +135,15 @@ export class BinaryTree {
 
   /**
    * Find the maximum node, starting from the parameter node.
-   * 
-   * @param node 
+   *
+   * @param node
    */
   findMax = (node: TNode = this.root): TNode => {
     if (!node) {
       return null
     }
 
-    let current: TNode = node;
+    let current: TNode = node
 
     while (current.right) {
       current = current.right
@@ -164,7 +155,7 @@ export class BinaryTree {
   /**
    * AKA "sucessor" of the parameter node.
    * Funny thing - we don't need to look at the values to find the next larger.
-   * 
+   *
    * @param node
    */
   findNextGreater = (node: TNode = this.root): TNode => {
@@ -176,7 +167,7 @@ export class BinaryTree {
       return this.findMin(node.right)
     }
 
-    let current: TNode = node;
+    let current: TNode = node
 
     while (current.parent && current.parent.left !== current) {
       current = current.parent
@@ -188,8 +179,8 @@ export class BinaryTree {
   }
 
   /**
-   * AKA "predecessor" of the parameter node. Just switch left for right - done. 
-   * 
+   * AKA "predecessor" of the parameter node. Just switch left for right - done.
+   *
    * @param node
    */
   findNextSmaller = (node: TNode = this.root): TNode => {
@@ -201,7 +192,7 @@ export class BinaryTree {
       return this.findMin(node.left)
     }
 
-    let current: TNode = node;
+    let current: TNode = node
 
     while (current.parent && current.parent.right !== current) {
       current = current.parent
@@ -212,7 +203,7 @@ export class BinaryTree {
     return current.parent
   }
 
-  delete = (value:number):boolean => {
+  delete = (value: number): boolean => {
     let node = this.find(value)
 
     if (!node) {
@@ -223,11 +214,10 @@ export class BinaryTree {
     return this.deleteNode(node)
   }
 
-  deleteNode = (node:TNode):boolean => {
+  deleteNode = (node: TNode): boolean => {
     if (!node) {
       return false
     }
-
 
     // If we have left node but no right one
     if (node.left && !node.right) {
@@ -246,7 +236,7 @@ export class BinaryTree {
           node.parent.right = node.left
         }
         node.left.parent = node.parent
-      } 
+      }
     // Same thing, but inverted
     } if (!node.left && node.right) {
       this.size--
@@ -254,7 +244,7 @@ export class BinaryTree {
         this.root = node.right
         this.root.parent = null
       } else {
-        // We're still checking the parent connection the same way - 
+        // We're still checking the parent connection the same way -
         // just assigning the right child (because in this case only the right exists)
         if (node.parent.left === node) {
           node.parent.left = node.right
@@ -262,11 +252,11 @@ export class BinaryTree {
           node.parent.right = node.right
         }
         node.right.parent = node.parent
-      } 
+      }
     } else {
       // And this is the most complicated scenario - when the node has two children
 
-      // Find the next greatest value 
+      // Find the next greatest value
       let sucessor = this.findNextGreater(node)
 
       // Swap the values in the nodes
@@ -280,17 +270,17 @@ export class BinaryTree {
     return true
   }
 
-  avlInsert(value:number) {
+  avlInsert (value: number) {
     this.insert(value)
 
     this.fixAvl()
   }
 
   fixAvl = () => {
-
+    // TODO
   }
 
-  rightRotate= (node:TNode):TNode => {
+  rightRotate = (node: TNode): TNode => {
     return null
   }
 
@@ -299,7 +289,7 @@ export class BinaryTree {
    * https://www.geeksforgeeks.org/print-binary-tree-2-dimensions/
    * And translated from C++ to typescript.
    */
-  displayInner = (node: TNode, space: number) => {
+  private displayInner = (node: TNode, space: number) => {
     if (!node) {
       return
     }
@@ -309,10 +299,10 @@ export class BinaryTree {
     this.displayInner(node.right, space)
 
     process.stdout.write('\n')
-    for (let i = this.dist; i<space; i++) {
+    for (let i = this.dist; i < space; i++) {
       process.stdout.write(' ')
     }
-    process.stdout.write(node.value+' ('+node.height+')\n')
+    process.stdout.write(node.value + ' (' + node.height + ')\n')
 
     this.displayInner(node.left, space)
   }
@@ -321,4 +311,3 @@ export class BinaryTree {
     this.displayInner(this.root, 0)
   }
 }
-

@@ -6,12 +6,12 @@ describe("Tree tests", function() {
   beforeEach(() => {
     tree = new BinaryTree()
 
-    tree.insertHeight(5)
-    tree.insertHeight(2)
-    tree.insertHeight(8)
-    tree.insertHeight(7)
-    tree.insertHeight(14)
-    tree.insertHeight(15)
+    tree.insert(5)
+    tree.insert(2)
+    tree.insert(8)
+    tree.insert(7)
+    tree.insert(14)
+    tree.insert(15)
   })
 
   it('should insert and find', () => {
@@ -95,6 +95,9 @@ describe("Tree tests", function() {
 
   it('should calculate insert height correctly', () => {
     expect(tree.root.height).toEqual(3)
+    tree.insert(16)
+    tree.insert(17)
+    tree.display()
   })
 
 })

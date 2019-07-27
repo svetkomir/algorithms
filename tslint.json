@@ -1,0 +1,11 @@
+{
+    "defaultSeverity": "error",
+    "extends": "tslint-config-standard",
+    "rules": {
+        "await-promise": [
+            true,
+            "Bluebird"
+        ],
+        "no-floating-promises": true
+    }
+}
