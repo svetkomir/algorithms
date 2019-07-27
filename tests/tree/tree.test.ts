@@ -117,5 +117,49 @@ describe("Tree tests", function() {
     expect(tree.find(15).height).toEqual(1)
   })
 
+  it('should rotate right correctly', () => {
+    tree = new BinaryTree()
+
+    tree.insert(5)
+    tree.insert(2)
+    tree.insert(8)
+    tree.insert(7)
+    tree.insert(14)
+    tree.insert(6)
+
+    tree.rotateRight(tree.find(8))
+    let find7:TNode = tree.find(7)
+    expect(find7.left.value).toEqual(6)
+    expect(find7.right.value).toEqual(8)
+    expect(find7.height).toEqual(2)
+
+    tree.rotateRight(tree.root)
+    expect(tree.root.left).toEqual(null)
+    expect(tree.root.right.value).toEqual(5)
+    expect(tree.root.height).toEqual(4)
+  })
+
+  it('should rotate left correctly', () => {
+    tree = new BinaryTree()
+
+    tree.insert(5)
+    tree.insert(2)
+    tree.insert(8)
+    tree.insert(7)
+    tree.insert(14)
+    tree.insert(6)
+
+    tree.rotateLeft(tree.find(8))
+    let find14:TNode = tree.find(14)
+    expect(find14.left.value).toEqual(8)
+    expect(find14.right).toEqual(null)
+    expect(find14.height).toEqual(3)
+
+    tree.rotateLeft(tree.root)
+    expect(tree.root.left.value).toEqual(5)
+    expect(tree.root.right).toEqual(null)
+    expect(tree.root.height).toEqual(4)
+  })
+
 })
 

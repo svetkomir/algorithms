@@ -72,16 +72,25 @@ export class BinaryTree {
 
     let returnValue: TNode = current
 
-    this.correctHeight(current)
+    this.recalcHeight(current)
 
     return current
   }
 
+  recalcNodeHeight = (node: TNode) => {
+    if (!node) {
+      return
+    }
+
+    node.height = Math.max(node.left ? node.left.height : -1,
+      node.right ? node.right.height : -1) + 1    
+  }
+
   /**
-   * This goes from the starting node through node's parent until it reaches the root. 
+   * This goes from the starting node through node's parent until it reaches the root.
    * Recalculates the height for each parent. Should work for delete or insert.
    */
-  private correctHeight = (node: TNode) => {
+  private recalcHeight = (node: TNode) => {
     let current: TNode = node
 
     while (!false) {
@@ -90,15 +99,144 @@ export class BinaryTree {
         return
       }
 
-      current.parent.height = Math.max(current.parent.left ? current.parent.left.height : -1,
-        current.parent.right ? current.parent.right.height : -1) + 1
+      this.recalcNodeHeight(current.parent)
 
       current = current.parent
     }
   }
 
   /**
-   * Pretty self explanatory. Same complexity as binary search.
+   * Rotates node (a) to the right. Constant complexity.
+   *
+   *         a              b
+   *        / \            / \
+   *       b   c   ->     d   a
+   *      / \            /   / \
+   *     d  e           f   e   c
+   *    /
+   *   f
+   */
+  rotateRight = (node: TNode): boolean => {
+    if (!node || !node.left) {
+      // We can't rotate to the right if the node doesn't exist
+      // or if it doesn't have a left child
+
+      return false
+    }
+
+    // Save the left node (b)
+    let leftNode: TNode = node.left
+
+    // Move the left node's right child to the node's right left child
+    // (e) becomes a child of (a)
+    node.left = leftNode.right
+
+    // If (e) exists then set the parent of (e) to point to (a)
+    if (node.left) {
+      node.left.parent = node
+    }
+
+    // Set (a) to be the right child of (b)
+    leftNode.right = node
+
+    // Set the parent of (a) to be the parent of (b)
+    leftNode.parent = node.parent
+
+    // Set (b) to be the parent of (a)
+    node.parent = leftNode
+
+
+    // If at this point the parent of (b) is null then we're at the root
+    // In this case we set the root of the tree to (b) and we're done.
+    if (!leftNode.parent) {
+      this.root = leftNode
+    } else {
+      // If this is not root then we need to update the parent of (a)
+      // If (a) is the left child then we update the left link to (b)
+      if (leftNode.parent.left === node) {
+        leftNode.parent.left = leftNode
+
+      // Otherwise we update the right link
+      } else {
+        leftNode.parent.right = leftNode
+      }
+    }
+
+    // Recalculate the correct heights. Start from the lowest levels for correct result.
+    this.recalcNodeHeight(leftNode.left)
+    this.recalcNodeHeight(leftNode.right)
+    this.recalcNodeHeight(leftNode)
+    this.recalcNodeHeight(leftNode.parent)
+  }
+
+  /**
+   * Rotates node (a) to the left. Constant complexity.
+   * Exact same thing but inverted.
+   *
+   *         a              c
+   *        / \            / \
+   *       b   c   ->     a   e
+   *          / \        / \   \
+   *         d   e      b   d   f
+   *              \
+   *               f
+   */
+  rotateLeft = (node: TNode): boolean => {
+    if (!node || !node.right) {
+      // We can't rotate to the left if the node doesn't exist
+      // or if it doesn't have a right child
+
+      return false
+    }
+
+    // Save the right node (c)
+    let rightNode: TNode = node.right
+
+    // Move the right node's left child to the node's right child
+    // (d) becomes a right child of (a)
+    node.right = rightNode.left
+
+    // If (d) exists then set the parent of (d) to point to (a)
+    if (node.right) {
+      node.right.parent = node
+    }
+
+    // Set (a) to be the right child of (c)
+    rightNode.left = node
+
+    // Set the parent of (c) as the parent of (a)
+    rightNode.parent = node.parent
+
+    // Set (c) to be the parent of (a)
+    node.parent = rightNode
+
+    // If at this point the parent of (c) is null then we're at the root
+    // In this case we set the root of the tree to (c) and we're done.
+    if (!rightNode.parent) {
+      this.root = rightNode
+    } else {
+      // If this is not root then we need to update the parent of (a)
+      // If (a) is the left child then we update the left link to (c)
+      // This logic is not inverted because we're just checking the
+      // parent left and right children
+      if (rightNode.parent.left === node) {
+        rightNode.parent.left = rightNode
+
+      // Otherwise we update the right link
+      } else {
+        rightNode.parent.right = rightNode
+      }
+    }
+
+    // Recalculate the correct heights. Start from the lowest levels for correct result.
+    this.recalcNodeHeight(rightNode.left)
+    this.recalcNodeHeight(rightNode.right)
+    this.recalcNodeHeight(rightNode)
+    this.recalcNodeHeight(rightNode.parent)
+  }
+
+  /**
+   * Pretty self explanatory. Same complexity as binary search Big O(log n)
    */
   find = (searchValue: number, node: TNode = this.root): TNode => {
     if (!node) {
@@ -244,7 +382,7 @@ export class BinaryTree {
 
         // At this point the deletion is complete. Run the height recalculation routine.
         // Start from the node that was moved "up".
-        this.correctHeight(node.left)
+        this.recalcHeight(node.left)
       }
     // Same thing, but inverted
     } if (!node.left && node.right) {
@@ -265,7 +403,7 @@ export class BinaryTree {
 
         // At this point the deletion is complete. Run the height recalculation routine.
         // Start from the node that was moved up a level.
-        this.correctHeight(node.right)
+        this.recalcHeight(node.right)
       }
     } else {
       // And this is the most complicated scenario - when the node has two children
