@@ -25,7 +25,7 @@ export class BinaryTree {
   size: number = 0
 
   // This is a variable used for display. Increase for larger trees.
-  dist: number = 5
+  dist: number = 10
 
   /**
    * Insert a value at the correct place
@@ -72,7 +72,7 @@ export class BinaryTree {
 
     let returnValue: TNode = current
 
-    this.recalcHeight(current)
+    this.recalcHeightAndBalance(current)
 
     return current
   }
@@ -87,10 +87,33 @@ export class BinaryTree {
   }
 
   /**
-   * This goes from the starting node through node's parent until it reaches the root.
-   * Recalculates the height for each parent. Should work for delete or insert.
+   * Where the magic happens. Rotate node to rebalance if required.
    */
-  private recalcHeight = (node: TNode) => {
+  rebalanceNode = (node:TNode): TNode => {
+    if (!node) {
+      return node
+    }
+
+    let leftHeight: number = node.left ? node.left.height : -1
+    let rightHeight: number = node.right ? node.right.height : -1
+
+    if (Math.abs(leftHeight - rightHeight) >= 2) {
+      if (leftHeight>rightHeight) {
+        return this.rotateRight(node)
+      } else {
+        return this.rotateLeft(node)
+      }
+    }
+
+    return node
+  }
+
+  /**
+   * This goes from the starting node through node's parent until it reaches the root.
+   * Recalculates the height for each parent. After recalculation it rebalances each 
+   * parent as needed. Should work for delete or insert.
+   */
+  private recalcHeightAndBalance = (node: TNode) => {
     let current: TNode = node
 
     while (!false) {
@@ -102,6 +125,8 @@ export class BinaryTree {
       this.recalcNodeHeight(current.parent)
 
       current = current.parent
+
+      current = this.rebalanceNode(current)
     }
   }
 
@@ -116,12 +141,12 @@ export class BinaryTree {
    *    /
    *   f
    */
-  rotateRight = (node: TNode): boolean => {
+  rotateRight = (node: TNode): TNode => {
     if (!node || !node.left) {
       // We can't rotate to the right if the node doesn't exist
       // or if it doesn't have a left child
 
-      return false
+      return node
     }
 
     // Save the left node (b)
@@ -167,11 +192,12 @@ export class BinaryTree {
     this.recalcNodeHeight(leftNode.right)
     this.recalcNodeHeight(leftNode)
     this.recalcNodeHeight(leftNode.parent)
+
+    return leftNode
   }
 
   /**
    * Rotates node (a) to the left. Constant complexity.
-   * Exact same thing but inverted.
    *
    *         a              c
    *        / \            / \
@@ -181,12 +207,12 @@ export class BinaryTree {
    *              \
    *               f
    */
-  rotateLeft = (node: TNode): boolean => {
+  rotateLeft = (node: TNode): TNode => {
     if (!node || !node.right) {
       // We can't rotate to the left if the node doesn't exist
       // or if it doesn't have a right child
 
-      return false
+      return node
     }
 
     // Save the right node (c)
@@ -233,10 +259,14 @@ export class BinaryTree {
     this.recalcNodeHeight(rightNode.right)
     this.recalcNodeHeight(rightNode)
     this.recalcNodeHeight(rightNode.parent)
+
+    return rightNode
   }
 
   /**
-   * Pretty self explanatory. Same complexity as binary search Big O(log n)
+   * Pretty self explanatory. Same complexity as binary search Big O(log n) 
+   * This is only if the tree is balanced. If it's not balanced the complexity is 
+   * Big O(h) where h is the height and in the worst case scenario h=n
    */
   find = (searchValue: number, node: TNode = this.root): TNode => {
     if (!node) {
@@ -382,7 +412,7 @@ export class BinaryTree {
 
         // At this point the deletion is complete. Run the height recalculation routine.
         // Start from the node that was moved "up".
-        this.recalcHeight(node.left)
+        this.recalcHeightAndBalance(node.left)
       }
     // Same thing, but inverted
     } if (!node.left && node.right) {
@@ -403,7 +433,7 @@ export class BinaryTree {
 
         // At this point the deletion is complete. Run the height recalculation routine.
         // Start from the node that was moved up a level.
-        this.recalcHeight(node.right)
+        this.recalcHeightAndBalance(node.right)
       }
     } else {
       // And this is the most complicated scenario - when the node has two children
