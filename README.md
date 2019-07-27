@@ -1,2 +1,4 @@
 # algorithms
-Svet's playground
+
+1. Heapsort
+1. AVL Tree
