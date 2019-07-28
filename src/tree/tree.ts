@@ -13,6 +13,9 @@ import * as process from 'process'
  * 1. If the value is a simple type (number, string, bool and
  * so forth) we can have a counter variable for repeating nodes.
  *
+ * 2. If it's an object then we can build a linked list on each
+ * node to track objects with duplicate keys
+ *
  */
 export class TNode {
   public value: number
@@ -108,6 +111,28 @@ export class BinaryTree {
 
   /**
    * Where the magic happens. Rotate node to rebalance if required.
+   * There are two simple scenarios where we simply must rotate right or left.
+   *
+   * And there are two more complex scenarios where we have to rotate right-left or left right.
+   *
+   * The complex scenario can be explained like this:
+   *
+   *    Rotate b left            Rotate a right
+   *
+   *          a                         a                     f
+   *        /   \                     // \\                 /   \
+   *       b     c                   f     c               b     a
+   *     // \\     \    ->         /   \     \    ->      / \    / \
+   *    e     f     g             b     i     g          e   h  i   c
+   *         / \                 / \     \                       \   \
+   *        h   i               e   h     j                       j   g
+   *             \
+   *              j
+   * If we simply rotate a to the right we won't get a balanced tree because f will be moved
+   * to left child of a and the tree root will be right heavy instead of left heavy.
+   *
+   * This is why we need to rotate b to the left first. That way a's left child will become left heavy(or balanced)
+   * and we can rotate a to the right to balance the tree.
    */
   rebalanceNode = (node: TNode): TNode => {
     if (!node) {
@@ -116,14 +141,18 @@ export class BinaryTree {
 
     const { leftHeight, rightHeight } = this.getChildrenHeights(node)
 
+    // If node is not balanced AKA more than 1 difference in height between the node's children
     if (Math.abs(leftHeight - rightHeight) >= 2) {
+      // Node is left heavy - we need to rotate right
       if (leftHeight > rightHeight) {
         const childHeights = this.getChildrenHeights(node.left)
+        // If the left child is right heavy then we need to rotate it left first
         if (childHeights.rightHeight > childHeights.leftHeight) {
           this.rotateLeft(node.left)
         }
         return this.rotateRight(node)
       } else {
+        // Same thing as above but inverted
         const childHeights = this.getChildrenHeights(node.right)
         if (childHeights.leftHeight > childHeights.rightHeight) {
           this.rotateRight(node.right)
