@@ -1,4 +1,4 @@
-import { getArray } from '../data/generate'
+import { getArray, random } from '../data/generate'
 import { BinaryTree } from './tree'
 
 let tr = new BinaryTree()
@@ -8,6 +8,12 @@ for (let i = 0; i < arr.length; i++) {
   tr.insert(arr[i])
 }
 
+tr.display()
+
+for (let i = 0;i < 10;i++) {
+  tr.delete(arr[random(0,99)])
+}
+console.log('-----------------------------------')
 tr.display()
 
 console.log(`max value is ${tr.findMax().value}`)

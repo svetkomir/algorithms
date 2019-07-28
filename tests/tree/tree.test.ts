@@ -127,16 +127,17 @@ describe("Tree tests", function() {
     tree.insert(14)
     tree.insert(6)
 
-    tree.rotateRight(tree.find(8))
+    tree.rotateRight(tree.find(5))
     let find7: TNode = tree.find(7)
-    expect(find7.left.value).toEqual(6)
-    expect(find7.right).toEqual(null)
-    expect(find7.height).toEqual(1)
+    expect(find7.left.value).toEqual(2)
+    expect(find7.right.value).toEqual(8)
+    expect(find7.height).toEqual(3)
 
     tree.rotateRight(tree.root)
+
     expect(tree.root.left).toEqual(null)
-    expect(tree.root.right.value).toEqual(5)
-    expect(tree.root.height).toEqual(4)
+    expect(tree.root.right.value).toEqual(7)
+    expect(tree.root.height).toEqual(3)
 
   })
 
@@ -154,13 +155,13 @@ describe("Tree tests", function() {
     let find14: TNode = tree.find(14)
     expect(find14.left.value).toEqual(8)
     expect(find14.right).toEqual(null)
-    expect(find14.height).toEqual(4)
-    expect(tree.root).toEqual(find14)
+    expect(find14.height).toEqual(1)
+    expect(tree.root).toEqual(tree.find(7))
 
     tree.rotateLeft(tree.root)
-    expect(tree.root.left.value).toEqual(8)
+    expect(tree.root.left.value).toEqual(7)
     expect(tree.root.right).toEqual(null)
-    expect(tree.root.height).toEqual(4)
+    expect(tree.root.height).toEqual(3)
+    expect(tree.root.value).toEqual(14)
   })
-
 })

@@ -1,4 +1,10 @@
-/** Tree implementation. */
+/**
+ * AVL Tree implementation. AVL Tree is a balanced binary search tree.
+ * The important methods are the height calculation and maintenance and
+ * the rotation routines. The rotation is used to rebalance the tree. Rebalancing
+ * is done after insertion and deletion.
+ *
+ */
 import * as process from 'process'
 
 /**
@@ -86,6 +92,20 @@ export class BinaryTree {
       node.right ? node.right.height : -1) + 1
   }
 
+  getChildrenHeights = (node: TNode): any => {
+    if (!node) {
+      return {
+        leftHeight: -1,
+        rightHeight: -1
+      }
+    }
+
+    return {
+      leftHeight: node.left ? node.left.height : -1,
+      rightHeight: node.right ? node.right.height : -1
+    }
+  }
+
   /**
    * Where the magic happens. Rotate node to rebalance if required.
    */
@@ -94,13 +114,20 @@ export class BinaryTree {
       return node
     }
 
-    let leftHeight: number = node.left ? node.left.height : -1
-    let rightHeight: number = node.right ? node.right.height : -1
+    const { leftHeight, rightHeight } = this.getChildrenHeights(node)
 
     if (Math.abs(leftHeight - rightHeight) >= 2) {
       if (leftHeight > rightHeight) {
+        const childHeights = this.getChildrenHeights(node.left)
+        if (childHeights.rightHeight > childHeights.leftHeight) {
+          this.rotateLeft(node.left)
+        }
         return this.rotateRight(node)
       } else {
+        const childHeights = this.getChildrenHeights(node.right)
+        if (childHeights.leftHeight > childHeights.rightHeight) {
+          this.rotateRight(node.right)
+        }
         return this.rotateLeft(node)
       }
     }
@@ -475,20 +502,6 @@ export class BinaryTree {
     return true
   }
 
-  avlInsert (value: number) {
-    this.insert(value)
-
-    this.fixAvl()
-  }
-
-  fixAvl = () => {
-    // TODO
-  }
-
-  rightRotate = (node: TNode): TNode => {
-    return null
-  }
-
   /**
    * Shamelessly stolen from:
    * https://www.geeksforgeeks.org/print-binary-tree-2-dimensions/
@@ -514,5 +527,6 @@ export class BinaryTree {
 
   display = () => {
     this.displayInner(this.root, 0)
+    console.log('------------------------------------------')
   }
 }
