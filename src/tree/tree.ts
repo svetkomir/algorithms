@@ -250,7 +250,12 @@ export class BinaryTree {
     this.recalcNodeHeight(leftNode.left)
     this.recalcNodeHeight(leftNode.right)
     this.recalcNodeHeight(leftNode)
-    this.recalcNodeHeight(leftNode.parent)
+
+    let current: TNode = leftNode.parent
+    while (current) {
+      this.recalcNodeHeight(current)
+      current = current.parent
+    }
 
     return leftNode
   }
@@ -317,7 +322,12 @@ export class BinaryTree {
     this.recalcNodeHeight(rightNode.left)
     this.recalcNodeHeight(rightNode.right)
     this.recalcNodeHeight(rightNode)
-    this.recalcNodeHeight(rightNode.parent)
+
+    let current: TNode = rightNode.parent
+    while (current) {
+      this.recalcNodeHeight(current)
+      current = current.parent
+    }
 
     return rightNode
   }
