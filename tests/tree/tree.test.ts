@@ -38,7 +38,7 @@ describe("Tree tests", function() {
   it('should find, and find correct min and max values', () => {
     let found8:TNode = tree.find(8)
     expect(tree.findMax(found8).value).toEqual(15)
-    expect(tree.findMin(found8).value).toEqual(7)
+    expect(tree.findMin(found8).value).toEqual(2)
 
     expect(tree.findMin().value).toEqual(2)
     expect(tree.findMax().value).toEqual(15)
@@ -55,7 +55,7 @@ describe("Tree tests", function() {
 
     let found8:TNode = tree.find(8)
     expect(tree.findNextGreater(found8).value).toEqual(14)
-    expect(tree.findNextSmaller(found8).value).toEqual(7)
+    expect(tree.findNextSmaller(found8).value).toEqual(2)
   })
 
   it('should delete 14, find, and find correct NextSmaller and NextGreater values', () => {
@@ -72,48 +72,48 @@ describe("Tree tests", function() {
 
     let found8:TNode = tree.find(8)
     expect(tree.findNextGreater(found8).value).toEqual(15)
-    expect(tree.findNextSmaller(found8).value).toEqual(7)
+    expect(tree.findNextSmaller(found8).value).toEqual(2)
   })
 
   it('should delete 8, find, and find correct NextSmaller and NextGreater values', () => {
     tree.delete(8)
     expect(tree.find(8)).toEqual(null)
 
-    let found2:TNode = tree.find(2)
+    let found2: TNode = tree.find(2)
     expect(tree.findNextGreater(found2).value).toEqual(5)
     expect(tree.findNextSmaller(found2)).toEqual(null)
 
-    let found15:TNode = tree.find(15)
+    let found15: TNode = tree.find(15)
     expect(tree.findNextSmaller(found15).value).toEqual(14)
     expect(tree.findNextGreater(found15)).toEqual(null)
 
-    let found14:TNode = tree.find(14)
-    expect(tree.findNextSmaller(found14).value).toEqual(7)
+    let found14: TNode = tree.find(14)
+    expect(tree.findNextSmaller(found14).value).toEqual(2)
     expect(tree.findNextGreater(found14).value).toEqual(15)
 
   })
 
   it('should calculate insert height correctly', () => {
-    expect(tree.root.height).toEqual(3)
-    
+    expect(tree.root.height).toEqual(2)
+
     tree.insert(16)
     tree.insert(17)
-    expect(tree.root.height).toEqual(5)
+    expect(tree.root.height).toEqual(3)
   })
 
   it('should calculate delete height correctly', () => {
-    expect(tree.root.height).toEqual(3)
-    
+    expect(tree.root.height).toEqual(2)
+
     tree.insert(16)
     tree.insert(17)
-    expect(tree.root.height).toEqual(5)
+    expect(tree.root.height).toEqual(3)
 
     tree.delete(8)
-    expect(tree.root.height).toEqual(4)
-    expect(tree.find(14).height).toEqual(3)
+    expect(tree.root.height).toEqual(3)
+    expect(tree.find(16).height).toEqual(1)
 
     tree.delete(16)
-    expect(tree.root.height).toEqual(3)
+    expect(tree.root.height).toEqual(2)
     expect(tree.find(15).height).toEqual(1)
   })
 
@@ -128,15 +128,16 @@ describe("Tree tests", function() {
     tree.insert(6)
 
     tree.rotateRight(tree.find(8))
-    let find7:TNode = tree.find(7)
+    let find7: TNode = tree.find(7)
     expect(find7.left.value).toEqual(6)
-    expect(find7.right.value).toEqual(8)
-    expect(find7.height).toEqual(2)
+    expect(find7.right).toEqual(null)
+    expect(find7.height).toEqual(1)
 
     tree.rotateRight(tree.root)
     expect(tree.root.left).toEqual(null)
     expect(tree.root.right.value).toEqual(5)
     expect(tree.root.height).toEqual(4)
+
   })
 
   it('should rotate left correctly', () => {
@@ -150,16 +151,16 @@ describe("Tree tests", function() {
     tree.insert(6)
 
     tree.rotateLeft(tree.find(8))
-    let find14:TNode = tree.find(14)
+    let find14: TNode = tree.find(14)
     expect(find14.left.value).toEqual(8)
     expect(find14.right).toEqual(null)
-    expect(find14.height).toEqual(3)
+    expect(find14.height).toEqual(4)
+    expect(tree.root).toEqual(find14)
 
     tree.rotateLeft(tree.root)
-    expect(tree.root.left.value).toEqual(5)
+    expect(tree.root.left.value).toEqual(8)
     expect(tree.root.right).toEqual(null)
     expect(tree.root.height).toEqual(4)
   })
 
 })
-

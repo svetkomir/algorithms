@@ -83,13 +83,13 @@ export class BinaryTree {
     }
 
     node.height = Math.max(node.left ? node.left.height : -1,
-      node.right ? node.right.height : -1) + 1    
+      node.right ? node.right.height : -1) + 1
   }
 
   /**
    * Where the magic happens. Rotate node to rebalance if required.
    */
-  rebalanceNode = (node:TNode): TNode => {
+  rebalanceNode = (node: TNode): TNode => {
     if (!node) {
       return node
     }
@@ -98,7 +98,7 @@ export class BinaryTree {
     let rightHeight: number = node.right ? node.right.height : -1
 
     if (Math.abs(leftHeight - rightHeight) >= 2) {
-      if (leftHeight>rightHeight) {
+      if (leftHeight > rightHeight) {
         return this.rotateRight(node)
       } else {
         return this.rotateLeft(node)
@@ -110,10 +110,14 @@ export class BinaryTree {
 
   /**
    * This goes from the starting node through node's parent until it reaches the root.
-   * Recalculates the height for each parent. After recalculation it rebalances each 
+   * Recalculates the height for each parent. After recalculation it rebalances each
    * parent as needed. Should work for delete or insert.
    */
   private recalcHeightAndBalance = (node: TNode) => {
+    if (!node) {
+      return
+    }
+
     let current: TNode = node
 
     while (!false) {
@@ -169,7 +173,6 @@ export class BinaryTree {
 
     // Set (b) to be the parent of (a)
     node.parent = leftNode
-
 
     // If at this point the parent of (b) is null then we're at the root
     // In this case we set the root of the tree to (b) and we're done.
@@ -264,8 +267,8 @@ export class BinaryTree {
   }
 
   /**
-   * Pretty self explanatory. Same complexity as binary search Big O(log n) 
-   * This is only if the tree is balanced. If it's not balanced the complexity is 
+   * Pretty self explanatory. Same complexity as binary search Big O(log n)
+   * This is only if the tree is balanced. If it's not balanced the complexity is
    * Big O(h) where h is the height and in the worst case scenario h=n
    */
   find = (searchValue: number, node: TNode = this.root): TNode => {
@@ -391,13 +394,32 @@ export class BinaryTree {
       return false
     }
 
+    // Simplest scenario - the node to delete is a leaf. Just remove it.
+    if (!node.left && !node.right) {
+      let parent: TNode = node.parent
+      // Root node
+      if (node.parent === null) {
+        this.root = null
+        this.size = 0
+      } else if (node.parent.left === node) {
+        node.parent.left = null
+      } else {
+        // Otherwise - reset parent.right
+        node.parent.right = null
+      }
+      node.parent = null
+
+      // After deleting the leaf we must recalculate height and rebalance if necessary
+      this.recalcHeightAndBalance(parent)
+      return true
     // If we have left node but no right one
-    if (node.left && !node.right) {
+    } else if (node.left && !node.right) {
       this.size--
       // If we're trying to delete the root level - set root to left
       if (!node.parent) {
         this.root = node.left
         this.root.parent = null
+        this.recalcHeightAndBalance(this.root)
       } else {
         // This is not the root level
         // If the parent is pointing to the left to current - reset parent.left
@@ -415,11 +437,12 @@ export class BinaryTree {
         this.recalcHeightAndBalance(node.left)
       }
     // Same thing, but inverted
-    } if (!node.left && node.right) {
+    } else if (!node.left && node.right) {
       this.size--
       if (!node.parent) {
         this.root = node.right
         this.root.parent = null
+        this.recalcHeightAndBalance(this.root)
       } else {
         // We're still checking the parent connection the same way -
         // just assigning the right child (because in this case only the right exists)
