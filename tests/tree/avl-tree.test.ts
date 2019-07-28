@@ -1,10 +1,10 @@
-import { BinaryTree, TNode } from '../../src/tree/tree'
+import { AvlTree, TNode } from '../../src/tree/avl-tree'
 
-describe("Tree tests", function() {
-  let tree:BinaryTree
+describe("AVL Tree tests", function() {
+  let tree:AvlTree
 
   beforeEach(() => {
-    tree = new BinaryTree()
+    tree = new AvlTree()
 
     tree.insert(5)
     tree.insert(2)
@@ -15,7 +15,7 @@ describe("Tree tests", function() {
   })
 
   it('should insert and find', () => {
-    let tree = new BinaryTree()
+    let tree = new AvlTree()
 
     tree.insert(10)
     tree.insert(5)
@@ -118,7 +118,7 @@ describe("Tree tests", function() {
   })
 
   it('should rotate right correctly', () => {
-    tree = new BinaryTree()
+    tree = new AvlTree()
 
     tree.insert(5)
     tree.insert(2)
@@ -142,7 +142,7 @@ describe("Tree tests", function() {
   })
 
   it('should rotate left correctly', () => {
-    tree = new BinaryTree()
+    tree = new AvlTree()
 
     tree.insert(5)
     tree.insert(2)

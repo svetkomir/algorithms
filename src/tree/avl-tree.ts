@@ -15,7 +15,7 @@ import * as process from 'process'
  *
  * 2. If it's an object then we can build a linked list on each
  * node to track objects with duplicate keys
- * 
+ *
  * 3. The tree will work fine with duplicate keys, but it will be slower
  *
  */
@@ -31,7 +31,7 @@ export class TNode {
   }
 }
 
-export class BinaryTree {
+export class AvlTree {
   root?: TNode = null
   size: number = 0
 

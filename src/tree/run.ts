@@ -1,7 +1,7 @@
 import { getArray, random } from '../data/generate'
-import { BinaryTree } from './tree'
+import { AvlTree } from './avl-tree'
 
-let tr = new BinaryTree()
+let tr = new AvlTree()
 let arr = getArray(100)
 
 for (let i = 0; i < arr.length; i++) {
