@@ -164,4 +164,10 @@ describe("AVL Tree tests", function() {
     expect(tree.root.height).toEqual(3)
     expect(tree.root.value).toEqual(14)
   })
+
+  it('should delete root node', () => {
+    tree.delete(8)
+    expect(tree.root.height).toEqual(2)
+    expect(tree.root.value).toEqual(14)
+  })
 })
