@@ -40,8 +40,6 @@ export class AvlTree {
 
   /**
    * Insert a value at the correct place
-   * @param tree
-   * @param value
    */
   insert = (value: number): TNode => {
     if (!this.root) {

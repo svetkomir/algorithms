@@ -5,9 +5,9 @@ interface Countable {
 
 /**
  * Linear time, but arr.length + valueMax memory
- * 
- * @param arr 
- * @param valueMax 
+ *
+ * @param arr
+ * @param valueMax
  */
 export function countingSort<T extends Countable> (arr: T[], valueMax: number) {
   let counts: number[] = new Array<number>(valueMax)
@@ -26,7 +26,7 @@ class CElement implements Countable {
     return this.keyProperty
   }
 
-  CElement(value: number) {
+  CElement (value: number) {
     this.keyProperty = value
   }
 }

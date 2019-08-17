@@ -1,7 +1,7 @@
 import { AvlTree, TNode } from '../../src/tree/avl-tree'
 
-describe("AVL Tree tests", function() {
-  let tree:AvlTree
+describe('AVL Tree tests', function () {
+  let tree: AvlTree
 
   beforeEach(() => {
     tree = new AvlTree()
@@ -36,7 +36,7 @@ describe("AVL Tree tests", function() {
   })
 
   it('should find, and find correct min and max values', () => {
-    let found8:TNode = tree.find(8)
+    let found8: TNode = tree.find(8)
     expect(tree.findMax(found8).value).toEqual(15)
     expect(tree.findMin(found8).value).toEqual(2)
 
@@ -45,15 +45,15 @@ describe("AVL Tree tests", function() {
   })
 
   it('should find, and find correct NextSmaller and NextGreater values', () => {
-    let found2:TNode = tree.find(2)
+    let found2: TNode = tree.find(2)
     expect(tree.findNextGreater(found2).value).toEqual(5)
     expect(tree.findNextSmaller(found2)).toEqual(null)
 
-    let found15:TNode = tree.find(15)
+    let found15: TNode = tree.find(15)
     expect(tree.findNextSmaller(found15).value).toEqual(14)
     expect(tree.findNextGreater(found15)).toEqual(null)
 
-    let found8:TNode = tree.find(8)
+    let found8: TNode = tree.find(8)
     expect(tree.findNextGreater(found8).value).toEqual(14)
     expect(tree.findNextSmaller(found8).value).toEqual(2)
   })
@@ -62,15 +62,15 @@ describe("AVL Tree tests", function() {
     tree.delete(14)
     expect(tree.find(14)).toEqual(null)
 
-    let found2:TNode = tree.find(2)
+    let found2: TNode = tree.find(2)
     expect(tree.findNextGreater(found2).value).toEqual(5)
     expect(tree.findNextSmaller(found2)).toEqual(null)
 
-    let found15:TNode = tree.find(15)
+    let found15: TNode = tree.find(15)
     expect(tree.findNextSmaller(found15).value).toEqual(8)
     expect(tree.findNextGreater(found15)).toEqual(null)
 
-    let found8:TNode = tree.find(8)
+    let found8: TNode = tree.find(8)
     expect(tree.findNextGreater(found8).value).toEqual(15)
     expect(tree.findNextSmaller(found8).value).toEqual(2)
   })
