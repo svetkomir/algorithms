@@ -8,7 +8,9 @@
   },
   "scripts": {
     "test": "jasmine-ts --config=jasmine.json",
-    "lint": "tslint --project tsconfig.json 'src/**/*.ts' --fix"
+    "lint": "tslint --project tsconfig.json 'src/**/*.ts' --fix",
+    "heapsort": "ts-node src/heapsort/run.ts",
+    "tree": "ts-node src/tree/run.ts"
   },
   "repository": {
     "type": "git",

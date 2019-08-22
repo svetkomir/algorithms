@@ -75,15 +75,16 @@ export const heapSort = async (array: number[]) => {
     size: array.length
   }
 
+  buildMaxHeap(heap)
+
   while (heap.size > 0) {
-    // Build max heap
-    buildMaxHeap(heap)
 
     // At this point we know that we have the max element at first position
     // We swap it with the last element and exclude the last element by decrementing the size
-    // of the heap. Then we can run buildMaxHeap again (when we loop) because the condition
+    // of the heap. Then we can run maxHeapify again because the condition
     // for left and right to be max heaps is still fulfilled
     swap(heap.array, 0, heap.size - 1)
     heap.size--
+    maxHeapify(heap, 0)
   }
 }
